@@ -1,0 +1,27 @@
+Скачать отсюда http://download.geofabrik.de/russia/central-fed-district.html карту центральной части России central-fed-district-latest.osm.pbf
+
+Установить osmosis - должно сработать apt-get install osmosis
+
+Следующей командой можно взять все объекты внутри заданного прямоугольника:
+
+osmosis --read-pbf file=central-fed-district-latest.osm.pbf --bounding-box bottom=55.6978 top=55.706 left=37.52 right=37.5405 --write-xml file=moscow.osm
+
+(bottom, left) - координаты левой нижней точки прямоугольника, (top, right) - правой верхней
+лучше не брать большие прямоугольники, потому что для них выходной файл moscow.osm может слишком много весить
+
+Установить osmfilter командой wget -O - http://m.m.i24.cc/osmfilter.c |cc -x c - -O3 -o osmfilter
+osmfilter позволяет фильтровать объекты по тегам
+
+Следующими командами из полученного файла moscow.osm запишем объекты с тегами amenity(http://wiki.openstreetmap.org/wiki/RU:Key:amenity)
+и building(http://wiki.openstreetmap.org/wiki/RU:Key:building) в сответственно amenities.osm, buildings.osm
+./osmfilter moscow.osm --keep="amenity=" --ignore-dependencies -o=amenities.osm
+./osmfilter moscow.osm --keep="building=" --ignore-dependencies -o=buildings.osm
+с флагом --ignore-dependencies не возвращаются точки, связанные с объектом. Проблема в том, что у жилого здания нет координат, координаты есть только у связанных с ним точек - точек контура здания. 
+Поэтому видимо придётся запускать без флага --ignore-dependencies чтобы у здания взять любую связанную с ним точку и взять её кординату как координату здания.
+
+
+Видимо надо разбить москву на маленькие прямоугольники, пробежатся по ним, сначала получить все интересующие объекты инфраструктуры(рестораны, больницы, парковки).
+Потом пробежаеться ещё раз по прямоугольникам, в каждом выделяя все жилые здания, и для каждого считать расстояние до ближайших объектов инфраструктуры(надеюсь что это не будет работать вечность) занося как признак.
+
+
+
