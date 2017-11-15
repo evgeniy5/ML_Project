@@ -6,7 +6,7 @@
 
 osmosis --read-pbf file=central-fed-district-latest.osm.pbf --bounding-box bottom=55.6978 top=55.706 left=37.52 right=37.5405 --write-xml file=moscow.osm
 
-(bottom, left) - координаты левой нижней точки прямоугольника, (top, right) - правой верхней
+(bottom, left) - координаты левой нижней точки прямоугольника, (top, right) - правой верхней (на карте openstreermap можно кликнуть правой кнопкой мыши в любую точку и, нажав показать адрес, узнать координаты точки)
 лучше не брать большие прямоугольники, потому что для них выходной файл moscow.osm может слишком много весить
 
 Установить osmfilter командой wget -O - http://m.m.i24.cc/osmfilter.c |cc -x c - -O3 -o osmfilter
