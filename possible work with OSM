@@ -12,12 +12,15 @@ osmosis --read-pbf file=central-fed-district-latest.osm.pbf --bounding-box botto
 Установить osmfilter командой wget -O - http://m.m.i24.cc/osmfilter.c |cc -x c - -O3 -o osmfilter
 osmfilter позволяет фильтровать объекты по тегам
 
-Следующими командами из полученного файла moscow.osm запишем объекты с тегами amenity(http://wiki.openstreetmap.org/wiki/RU:Key:amenity)
+
+Установить osmconvert wget -O - http://m.m.i24.cc/osmconvert.c | cc -x c - -lz -O3 -o osmconvert
+
+Командой ./osmconvert moscow.osm --all-to-nodes -o=temp.osm нужно привести все объекты к простому виду node (изначально несколько типов объектов node, way, relation)
+
+Следующими командами из полученного файла temp.osm запишем объекты с тегами amenity(http://wiki.openstreetmap.org/wiki/RU:Key:amenity)
 и building(http://wiki.openstreetmap.org/wiki/RU:Key:building) в сответственно amenities.osm, buildings.osm
 ./osmfilter moscow.osm --keep="amenity=" --ignore-dependencies -o=amenities.osm
 ./osmfilter moscow.osm --keep="building=" --ignore-dependencies -o=buildings.osm
-с флагом --ignore-dependencies не возвращаются точки, связанные с объектом. Проблема в том, что у жилого здания нет координат, координаты есть только у связанных с ним точек - точек контура здания. 
-Поэтому видимо придётся запускать без флага --ignore-dependencies чтобы у здания взять любую связанную с ним точку и взять её кординату как координату здания.
 
 
 Видимо надо разбить москву на маленькие прямоугольники, пробежатся по ним, сначала получить все интересующие объекты инфраструктуры(рестораны, больницы, парковки).
